@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Flora{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <img src="{{ asset('images/about.jpg') }}" alt="À propos de l'Encyclopédie des Fleurs" class="img-fluid">
+            </div>
+            <div class="col-lg-6">
+                <h2>Contenu sur la botanique</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt felis velit,
+                    et faucibus mi interdum at. Integer vestibulum justo auctor, euismod velit sed, feugiat purus.
+                    Curabitur auctor ligula risus, sed lacinia quam ullamcorper id. Ut convallis tincidunt enim,
+                    nec ullamcorper orci pellentesque vitae. Sed et vulputate metus, at venenatis turpis.
+                    Sed et metus nec ex hendrerit bibendum. Mauris sollicitudin, sapien eget commodo consequat,
+                    turpis metus posuere purus, ut interdum quam erat non orci.
+                </p>
+            </div>
+        </div>
+    </div>
+
+<h1>Articles récents</h1>
+<div class="container">
+    <div class="row">
+        {% for article in articles %}
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-img-container">
+                        <img class="card-img-top" src="{{ vich_uploader_asset(article, 'imageFile') }}" alt="{{ article.title }}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <p class="card-text"></p>
+                        <a href="{{ path('app_front_show', {id: article.id}) }}" class="btn btn-primary">Lire la suite</a>
+                    </div>
+                    <div class="card-footer bg-primary">
+                        {% for category in article.categories %}
+                            <span class="badge badge-light">{{ category.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    {# .card-img-container {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+    } #}
+
+    .card-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+
+{% endblock %}
+

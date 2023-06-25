@@ -20,6 +20,14 @@ class ArticleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Article::class);
     }
+    public function findLatest(int $limit): array
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.updatedAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 
     public function save(Article $entity, bool $flush = false): void
     {

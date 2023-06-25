@@ -25,12 +25,21 @@ class Comment
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?bool $reported = null;
+    private ?bool $reported = false;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
-
+    public function __toString(): string
+    {
+        return $this->getContent();
+    }
+    
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -71,7 +80,8 @@ class Comment
 
         return $this;
     }
-
+  
+    
     public function isReported(): ?bool
     {
         return $this->reported;

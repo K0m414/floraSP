@@ -23,12 +23,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private array $roles = [];
-
+    public const ROLE_USER = 'ROLE_USER';
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
+    
+    public function __toString(): string
+    {
+        return $this->getEmail(); 
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +94,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+    private ?string $plainPassword = null;
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
     }
 
     /**

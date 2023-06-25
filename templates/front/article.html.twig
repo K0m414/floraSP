@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+    <h1>{{ article.title }}</h1>
+        <div class="col-md-6">
+            
+            <div class="formatted-article">
+                {{ article.content|raw }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img class="img img-fluid" src="{{ vich_uploader_asset(article, 'imageFile') }}" alt="{{ article.title }}">
+            <p>Catégories : {{ article.categories|join(', ') }}</p>
+            <p>Date de publication : le {{ article.updatedAt|date('d/m/Y à H:i') }}</p>
+        </div>
+    </div>
+            <h2>Commentaires</h2>
+
+{% for comment in article.comments %}
+    {% set isReported = comment.reported %}
+    {% set isAdmin = is_granted('ROLE_ADMIN') %}
+    {% set isUser = app.user is not null %}
+
+    {% if isReported and isAdmin %}
+        <div class="comment reported">
+            <p class="author">{{ comment.commentBy.email }}</p>
+            <p class="content">{{ comment.content }}</p>
+            <p class="timestamp">Posté le {{ comment.createdAt|date('d/m/Y à H:i') }}</p>
+            <div class="reported">
+                <p class="content">Numéro du commentaire : {{ comment.id }}</p>
+                <div class="actions">
+                    <a href="{{ path('admin') }}" class="btn btn-danger">Gérer les commentaires</a>
+                </div>
+            </div>
+        </div>
+    {% elseif not isReported %}
+        <div class="comment">
+            <p class="author">{{ comment.commentBy.email }}</p>
+            <p class="content">{{ comment.content }}</p>
+            <p class="timestamp">Posté le {{ comment.createdAt|date('d/m/Y à H:i') }}</p>
+
+            {% if app.user %}
+                <div class="actions">
+                    <form action="{{ path('app_front_report_comment', { 'id': comment.id }) }}" method="POST">
+                        {% set token = csrf_token('comment_report_' ~ comment.id) %}
+                        <input type="hidden" name="_token" value="{{ token }}">
+                        <button type="submit" class="btn btn-danger">Signaler</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <hr>
+{% endfor %}
+
+
+            <h3>Ajouter un commentaire</h3>
+            {% if app.user %}
+                <div class="comment-form">
+                    {{ form_start(form) }}
+                    <div class="form-group">
+                        {{ form_widget(form.content, { 'attr': { 'class': 'form-control', 'placeholder': 'Votre commentaire' } }) }}
+                    </div>
+                    <button class="btn btn-primary">Commenter</button>
+                    {{ form_end(form) }}
+                </div>
+            {% else %}
+                <p>Connectez-vous pour ajouter un commentaire.</p>
+            {% endif %}
+
+ <style>
+        h1, h2, h3{
+            padding:10px
+        }
+        .img{
+            display: block;
+            margin: 0 auto;
+        }
+        .formatted-article p {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .formatted-article img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+        }
+
+        .comment .author {
+            font-weight: bold;
+        }
+
+        .comment .content {
+            margin-top: 5px;
+        }
+
+        .comment .reported {
+            border: 1px solid red;
+            padding: 10px;
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        .comment .reported .content {
+            color: red;
+        }
+
+    .comment .actions {
+        margin-top: 5px;
+        text-align: right; 
+    }
+
+    .comment .actions button {
+        margin-right: 5px;
+    }
+    </style>
+{% endblock %}
