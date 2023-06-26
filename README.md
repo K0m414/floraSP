@@ -46,9 +46,9 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 7. Importer les données depuis le fichier public/sql/data.sql
 
 8. Créez un administrateur dans la base de données pour accéder au back-office. Vous pouvez le faire manuellement en exécutant une requête SQL pour insérer un nouvel utilisateur avec un rôle d'administrateur.
-   administrateur enregistrer dans data.sql
-   email : admin@admin.fr
-   mdp : admin12
+   **administrateur enregistrer dans data.sql**
+   - email : admin@admin.fr
+   - mdp : admin12
 
 ## Utilisation
 
